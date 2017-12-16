@@ -15,6 +15,12 @@ However, if you like it, maybe you drop me a note to dirk@ƒaustbande.de or by T
 `arpalert` is a nice litte tool that listens for ARP packets and can call a script upon alert (this, for example).
 Get it from here `https://www.arpalert.org/arpalert.html` or simply via `apt-get install arpalert` (or something
 similar with your systems packet-manager). Note: I have nothing to do with `arpalert` except that I am using it.
+
+To manually test this script run "arpAlertTwitterer.py aa:bb:cc:11:22:33 192.168.123.123  eth0 3 Some Vendor Name".
+If that is successfully, you could install arpalert as a service using the arpservice/install.sh.
+
+Make sure that you have installes 'tweepy' system global.
+If in doubt, (re)install it with 'sudo -H pip3 install tweepy'
 """
 
 import ast
