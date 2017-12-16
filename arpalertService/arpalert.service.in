@@ -1,0 +1,13 @@
+[Unit]
+Description=arpalert service
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+Type=simple
+ExecStart=
+Restart=always
+RestartSec=4
+
+[Install]
+WantedBy=multi-user.target
