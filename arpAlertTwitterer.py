@@ -33,26 +33,53 @@ import tweepy
 _configFile = '/etc/arpAlertTwitterer.conf'
 
 
+AlertTypes = {
+    '0': 'IP Change',
+    '1': 'MAC detected (non whitelist)',
+    '2': 'MAC in blacklist',
+    '3': 'New MAC detected',
+    '4': 'Unauthorized ARP request',
+    '5': 'Abusive ARP requests',
+    '6': 'Ether MAC differs from ARP',
+    '7': 'ARP Flood',
+    '8': 'MAC without IP'
+}
+
 def main(arp_alert_arguments):
     """
     Main entry point.
     :param arp_alert_arguments: all arguments passed from arpalert script call to this process.
-           For example: "aa:bb:cc:11:22:33 192.168.123.123  eth0 3 Some Vendor Name"
+           For example: "aa:bb:cc:11:22:33 192.168.123.123 '?' eth0 3 Some Vendor Name"
     :return: nothing
     """
-    config = read_configuration()
-    vendor_name = ' '.join(arp_alert_arguments[4:])
+    # Called with '['f0:c7:7f:f5:b3:25', '192.168.1.145', '', 'eth0', '3', 'Texas Instruments']'
+    print("Called with '{args}'".format(args=arp_alert_arguments))
+    if len(arp_alert_arguments) < 6:
+        print("Invalid number of arguments.{lf}."
+              "Call with 'mac ip ? interface code vendor_name'".format(lf=os.linesep))
+        return 1
 
-    message = ("👀  New device seen on `{device}`!{lf}{lf}"
+    config = read_configuration()
+    vendor_name = ' '.join(arp_alert_arguments[5:])
+
+    code = arp_alert_arguments[4]
+    if code in AlertTypes:
+        message = AlertTypes[code]
+    else:
+        message = "Unknown Code ({code})".format(code=code)
+
+    message = ("👀  {message} on `{device}`!{lf}{lf}"
                "MAC: {mac} ({vendor}){lf}"
                "IP: {ip}{lf}"
                "Maybe you take a look...🤷{lf}{lf}"
                "Cheers, your ARP bot".format(lf=os.linesep,
-                                             device=arp_alert_arguments[2],
-                                             state=arp_alert_arguments[3],
+                                             device=arp_alert_arguments[3],
                                              vendor=vendor_name,
                                              mac=arp_alert_arguments[0],
-                                             ip=arp_alert_arguments[1]))
+                                             ip=arp_alert_arguments[1],
+                                             message=message))
+
+    print(message)
 
     for recipient in config['recipients']:
         print("Sending to {name}".format(name=recipient))
