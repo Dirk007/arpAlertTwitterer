@@ -45,6 +45,7 @@ AlertTypes = {
     '8': 'MAC without IP'
 }
 
+
 def main(arp_alert_arguments):
     """
     Main entry point.
@@ -52,8 +53,6 @@ def main(arp_alert_arguments):
            For example: "aa:bb:cc:11:22:33 192.168.123.123 '?' eth0 3 Some Vendor Name"
     :return: nothing
     """
-    # Called with '['f0:c7:7f:f5:b3:25', '192.168.1.145', '', 'eth0', '3', 'Texas Instruments']'
-    print("Called with '{args}'".format(args=arp_alert_arguments))
     if len(arp_alert_arguments) < 6:
         print("Invalid number of arguments.{lf}."
               "Call with 'mac ip ? interface code vendor_name'".format(lf=os.linesep))
@@ -78,8 +77,6 @@ def main(arp_alert_arguments):
                                              mac=arp_alert_arguments[0],
                                              ip=arp_alert_arguments[1],
                                              message=message))
-
-    print(message)
 
     for recipient in config['recipients']:
         print("Sending to {name}".format(name=recipient))
